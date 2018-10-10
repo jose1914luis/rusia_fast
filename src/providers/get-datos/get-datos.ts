@@ -15,8 +15,8 @@ export class GetDatosProvider {
 
 	private db: SQLiteObject = null;
 
-	//private url = '/api'; 
-	private url = 'https://rusiatoursmoscu.com';    //"proxyUrl":"http://rusiatoursmoscu.com"
+	private url = '/api'; 
+	//private url = 'https://rusiatoursmoscu.com';    //"proxyUrl":"http://rusiatoursmoscu.com"
 
 	public usr = null;	
 	private eventoHijo = [];
@@ -453,6 +453,91 @@ export class GetDatosProvider {
 
 	};
 
+	/*public insertGastos(data){
+
+		var self = this;
+		var sql = [];
+		var promise = new Promise(function (resolve, reject) {
+            
+
+			    var registro = "INSERT OR IGNORE INTO gastostoursline "+
+			    	"(id, concepto_gasto_id, tipo_moneda, Total, fecha, ciudad_id, observaciones, usuario_id, evento_padre, eventos_id)"+
+			    	" VALUES (" + data.id + ", '"+JSON.stringify(data.concepto_gasto_id)+"', '" 
+			    	+data.tipo_moneda +"', '"+ data.Total+ "', '" + data.fecha +"', '"+
+			    	JSON.stringify(data.ciudad_id)+"', '"+data.observaciones+"', '"+JSON.stringify(data.usuario_id)+"', '"+data.evento_padre+"', '"+ data.eventos_id[0] +"');";
+
+			    //console.log(registro);
+			    sql.push(registro);
+		    //console.log(JSON.stringify(sql));  										   
+
+
+			    self.insertBatch(sql)
+			        .then(res => {
+			        	//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+			        	resolve();
+							
+					}).catch(e => {
+			  		console.log('Error en insertBatch DB');
+			  		console.log(e.message);
+			  		reject(e) 
+			  	});	  					
+
+        });
+
+        return promise;	
+
+	}*/
+
+	public updateGastos(id){
+
+		var self = this;
+		var sql = [];
+		var promise = new Promise(function (resolve, reject) {
+            
+            self.search_read('rusia.gastostoursline', [["id", "=", id]], self.tablas.Tbl_gastos_odoo)
+	  		.then(function(gastos) {
+	  		
+
+		  		Object.keys(gastos).forEach(key=> {
+		  			
+
+				    var registro = "INSERT OR REPLACE INTO gastostoursline "+
+				    	"(id, concepto_gasto_id, tipo_moneda, Total, fecha, ciudad_id, observaciones, usuario_id, evento_padre, eventos_id)"+
+				    	" VALUES (" + gastos[key].id + ", '"+JSON.stringify(gastos[key].concepto_gasto_id)+"', '" 
+				    	+gastos[key].tipo_moneda +"', '"+ gastos[key].Total+ "', '" + gastos[key].fecha +"', '"+
+				    	JSON.stringify(gastos[key].ciudad_id)+"', '"+gastos[key].observaciones+"', '"+JSON.stringify(gastos[key].usuario_id)+"', '"+gastos[key].evento_padre+"', '"+ gastos[key].eventos_id[0] +"');";
+
+				    console.log("UPDATE IMPORTANTE--------------------------------------------->");
+				    sql.push(registro);
+				}); 
+			    //console.log(JSON.stringify(sql));  										   
+
+
+			    self.insertBatch(sql)
+			        .then(res => {
+			        	//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+			        	resolve();
+							
+					}).catch(e => {
+			  		console.log('Error en insertBatch DB');
+			  		console.log(e.message);
+			  		reject(e) 
+			  	});	   			
+
+		  	}, 
+			function() {
+		  		
+		  		console.log('Error search_read - Loading offline gastos');
+		  		//console.log('usr.tipo_usuario'+ usr.tipo_usuario);					 	        	
+		  		resolve();							  		
+			});					
+
+        });
+
+        return promise;	
+
+	}
+
 	public cargarGastos(borrar){
 		var self = this;
 		var sql = [];
@@ -683,6 +768,68 @@ export class GetDatosProvider {
 
 	}
 
+	public async updateCalendario(id){
+
+		var self = this;
+		//self.eventoHijo = [];
+		var promise = new Promise(function (resolve, reject) {
+
+			var dominio = [];
+
+			self.search_read('rusia.eventos', [['id', '=', id]], self.tablas.Tbl_eventos_odoo)
+	      		.then(function(eventos) {
+
+	      			
+	      			var sql = [];
+  			
+	  				Object.keys(eventos).forEach(key=> {
+	  			
+
+	  					  			
+			  			var registro = "UPDATE eventos SET"+
+					    	" cliente_id_tmp = '" +eventos[key].Datos_Cliente_id[0]+"', cliente_id = '" + JSON.stringify(eventos[key].Datos_Cliente_id)+
+					    	"', representante_id ='" +JSON.stringify(eventos[key].representante_id)+ "', representante_id_tmp = '"+ eventos[key].representante_id[0] +
+					    	"',Fecha_Inicio = '" +  eventos[key].Fecha_Inicio +"', hora_inicio ='" + eventos[key].hora_inicio +
+					    	"', hora_final = '" + eventos[key].hora_final + "', hora_chofer = '" + self.parseDato(eventos[key].hora_chofer) +
+					    	"', name = '" + eventos[key].name + "', is_padre = '" + eventos[key].is_padre +"', fecha_padre = '" + eventos[key].fecha_padre +
+					    	"', guia_id =  '" + JSON.stringify(eventos[key].guia_id)+ "', chofer_id_tmp =  '" + eventos[key].chofer_id[0] + 
+					    	"', chofer_id = '" +JSON.stringify(eventos[key].chofer_id) + "', gasto_rub = '" + eventos[key].gasto_rub + "', gasto_eur = '" + eventos[key].gasto_eur + 
+					    	"', gasto_usd =  '" + eventos[key].gasto_usd + "' , gasto_paypal = '" + eventos[key].gasto_paypal +
+					    	"', Comentarios_Chofer='" + self.parseDato(eventos[key].Comentarios_Chofer) +
+					    	"', Comentarios_Internos='" + self.parseDato(eventos[key].Comentarios_Internos) + "', Comentarios_Cliente='" + self.parseDato(eventos[key].Comentarios_Cliente) + 
+					    	"', Comentarios_Guia='" + self.parseDato(eventos[key].Comentarios_Guia) + "', Fecha_Fin='" + eventos[key].Fecha_Fin + "', Transporte='"+ self.parseDato(eventos[key].Transporte)+
+					    	"', hotel_id='"+self.parseDato(JSON.stringify(eventos[key].hotel_id))+"',"+ " ciudad_id='"+JSON.stringify(eventos[key].ciudad_id)+
+					    	"', Total_Representante='"+eventos[key].Total_Representante+"', message='"+self.parseDato(eventos[key].message)+"', numero_pax='"+eventos[key].numero_pax+"', evento_id='"+JSON.stringify(eventos[key].evento_id)+
+					    	"', Servicio_Gastos='"+eventos[key].Servicio_Gastos+"', tarjeta_eur='"+eventos[key].tarjeta_eur+
+					    	"', tarjeta_rub='"+eventos[key].tarjeta_rub+"', tarjeta_usd='"+eventos[key].tarjeta_usd+"', is_guia='"+eventos[key].is_guia+"', is_traslado='"+eventos[key].is_traslado+
+					    	"', gastostoursline_ids='"+ JSON.stringify(eventos[key].gastostoursline_ids)+"', guia_id_tmp='"+eventos[key].guia_id[0]+"', gastos_ids='"+ JSON.stringify(eventos[key].gastos_ids) +
+					    	"', servicio_id='"+JSON.stringify(eventos[key].servicio_id)+"', salario='"+eventos[key].salario+"', observaciones_solicitud='"+self.parseDato(eventos[key].observaciones_solicitud)+"', nombre_reserva = '"+self.parseDato(eventos[key].nombre_reserva)+
+					    	"' WHERE id = '" +eventos[key].id+"'";
+					   	console.log("UPDATE IMPORTANTE -------------------------------------------------------------")
+					    console.log(registro);							  			
+					    sql.push(registro);
+					});
+
+					self.insertBatch(sql)
+					        .then(res => {
+					        	//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+					        	resolve();
+									
+							}).catch(e => {
+					  		console.log('Error en insertBatch DB');
+					  		console.log(e.message);
+					  		reject(e) 
+					  	});
+	      					
+			  	}, 
+				function() {
+			  		reject();						  		
+				});	
+		});
+
+		return promise;
+
+	}
 
 	public async cargarCalendario(borrar){
 

@@ -104,7 +104,7 @@ export class EventoPage {
 		this.evento_cal = this.navParams.get('evento');
 		this.permisos = this.navParams.get('permisos');
 		console.log('permisos:'+ this.permisos);
-		console.log('permisos:'+ JSON.stringify(this.evento_cal));
+		console.log('evento_cal:'+ JSON.stringify(this.evento_cal));
 		if(this.permisos == 'is_client'){
 			this.ver_segmento = false;
 
@@ -436,8 +436,7 @@ export class EventoPage {
     	self.guardar(null, 0).then(
 			res=>{
 				self.cargar = true;
-				var reload = [true,false,false,false,false,false,false];
-				self.getDatos.cargarCalendario(reload).then(
+				self.getDatos.updateCalendario(self.evento.id).then(
 	        		res=>{
 	        			console.log('Update complete');
 	        			self.initEvento();
@@ -627,17 +626,32 @@ export class EventoPage {
             	if(typeof data == 'boolean'){
 
             		self.cargar = true;
-            		var reload = [true,true,false,false,false,false,false]	
+
+            		/*var reload = [false,true,false,false,false,false,false]	
         			self.getDatos.cargarCalendario(reload).then(
 		        		res=>{
-		        			console.log('Update complete');
+
+		        			
+
+		        			/*console.log('Update complete');
 		        			self.initEvento();
 		        		},
 		        		fail=>{
 
 		        			console.log('Error loading cgastos');
 		        		}
-		        	);
+		        	);*/
+
+		        	self.getDatos.updateCalendario(self.evento.id).then(
+				        		res=>{
+				        			console.log('Update complete');
+				        			self.initEvento();
+				        		},
+				        		fail=>{
+
+				        			console.log('Error loading cgastos');
+				        		}
+				        	);
 		        		
 		        	
             	}else{
@@ -649,11 +663,23 @@ export class EventoPage {
 		        		res=>{
 		        			
 		        			self.cargar = true;
-		        			var reload = [true,true,false,false,false,false,false]
-		        			self.getDatos.cargarCalendario(reload).then(
+		        			//var reload = [false,true,false,false,false,false,false]
+		        			self.getDatos.updateGastos(gasto.id).then(
 				        		res=>{
-				        			console.log('Update complete');
-				        			self.initEvento();
+
+				        			/*console.log('Update complete');
+				        			self.initEvento();*/
+
+				        			self.getDatos.updateCalendario(self.evento.id).then(
+						        		res=>{
+						        			console.log('Update complete');
+						        			self.initEvento();
+						        		},
+						        		fail=>{
+
+						        			console.log('Error loading cgastos');
+						        		}
+						        	);
 				        		},
 				        		fail=>{
 
@@ -699,11 +725,20 @@ export class EventoPage {
             	self.guardar([[0,0,data]], 1).then(
 	        		res=>{
 	        			self.cargar = true;
-	        			var reload = [true,true,false,false,false,false,false]
+	        			var reload = [false,true,false,false,false,false,false]
 	        			self.getDatos.cargarCalendario(reload).then(
 			        		res=>{
-			        			console.log('Update complete');
-			        			self.initEvento();
+			        			/*console.log('Update*/
+			        			self.getDatos.updateCalendario(self.evento.id).then(
+					        		res=>{
+					        			console.log('Update complete');
+					        			self.initEvento();
+					        		},
+					        		fail=>{
+
+					        			console.log('Error loading cgastos');
+					        		}
+					        	);
 			        		},
 			        		fail=>{
 
@@ -832,8 +867,8 @@ export class EventoPage {
 			self.getDatos.eliminar('ir.attachment', id).then(
 				res=>{
 					self.cargar = true;
-					var reload = [true,false,true,false,false,false,false];
-        			self.getDatos.cargarCalendario(reload).then(
+
+					self.getDatos.updateCalendario(self.evento.id).then(
 		        		res=>{
 		        			console.log('Update complete');
 		        			self.initEvento();
@@ -843,6 +878,18 @@ export class EventoPage {
 		        			console.log('Error loading cgastos');
 		        		}
 		        	);
+
+					/*var reload = [true,false,true,false,false,false,false];
+        			self.getDatos.cargarCalendario(reload).then(
+		        		res=>{
+		        			console.log('Update complete');
+		        			self.initEvento();
+		        		},
+		        		fail=>{
+
+		        			console.log('Error loading cgastos');
+		        		}
+		        	);*/
 				},
 				fail=>{
 					console.log('error create gastos');

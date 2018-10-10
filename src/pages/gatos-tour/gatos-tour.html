@@ -20,7 +20,7 @@
                 <ion-icon ios="ios-cloud-upload" md="md-cloud-upload"></ion-icon>
             Guardar
         </ion-segment-button>
-        <ion-segment-button value="bookmark" icon-start (click)="eliminar()">
+        <ion-segment-button *ngIf="!nuevo" value="bookmark" icon-start (click)="eliminar()">
                 <ion-icon name="ios-trash" ></ion-icon>
             Eliminar
         </ion-segment-button>

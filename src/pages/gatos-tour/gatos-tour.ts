@@ -24,6 +24,7 @@ export class GatosTourPage {
 	
 	private default = [];
 	private prueba = 'hola mundo';
+	private nuevo = true;
 
 	constructor(public viewCtrl: ViewController, public navCtrl: NavController, public navParams: NavParams, public getDatos:GetDatosProvider) {
 		
@@ -33,6 +34,10 @@ export class GatosTourPage {
 		//console.log(this.gasto.usuario_id);
 		
 		this.default = this.gasto.usuario_id;	
+
+		if(this.gasto.id != null){
+			this.nuevo = false
+		}
 
 		console.log(JSON.stringify(this.gasto));
 		if(this.default.length > 0){
