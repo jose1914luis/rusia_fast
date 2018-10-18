@@ -80,6 +80,8 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
 import { AutocompleteComponent } from '../components/autocomplete/autocomplete';
 import { IOSFilePicker } from '@ionic-native/file-picker';
+import { Camera} from '@ionic-native/camera';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 
 @NgModule({
@@ -194,9 +196,11 @@ import { IOSFilePicker } from '@ionic-native/file-picker';
     SQLite,
     StatusBar,
     SplashScreen,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GetDatosProvider,
-    TablasProvider
+    TablasProvider,
+    LocalNotifications
   ]
 })
 export class AppModule {}

@@ -83,6 +83,59 @@ export class GetDatosProvider {
 	   return Math.round((bytes / Math.pow(1024, i))) + ' ' + sizes[i];
 	};
 
+	public cargarConceptos(){
+
+		var self = this;
+		var sql = [];
+		var promise = new Promise(function (resolve, reject) {
+            
+            //console.log('-----------------entro3 ---------------');
+            self.search_read('rusia.conceptos.gral', [], self.tablas.Tbl_conceptos_odoo)
+	  		.then(function(gastostours) {
+	  		
+
+	    		/*if(borrar == true){
+		  			sql.push('DELETE FROM ciudad;');
+	  			}*/
+
+		  		Object.keys(gastostours).forEach(key=> {
+
+				    var registro = "INSERT OR IGNORE INTO conceptos "+
+				    	"(id, name, ciudades)"+
+				    	" VALUES (" + gastostours[key].id + ", '"+gastostours[key].name+"', '"+
+				    	JSON.stringify(gastostours[key].ciudades)+"');";
+
+				    //console.log(registro);
+				    sql.push(registro);
+				}); 
+
+				self.insertBatch(sql)
+			        .then(res => {
+			        	//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+			        	resolve();
+							
+					}).catch(e => {
+			  		console.log('Error en insertBatch DB');
+			  		console.log(e.message);
+			  		reject(e) 
+			  	});
+
+			
+		  	}, 
+			function() {
+		  		
+		  		console.log('Error search_read - Loading offline attachment');
+		  		//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+		  		reject();							  		
+			});
+
+			
+
+        });
+
+        return promise;	
+
+	}	
 
 	public cargarCiudades(borrar){
 
@@ -323,6 +376,57 @@ export class GetDatosProvider {
 		return promise;
 	}
 
+	public updateAttachment(eventos_id){
+
+		var self = this;
+		var sql = [];
+		var promise = new Promise(function (resolve, reject) {
+            
+            console.log('-----------------UPDATE IMPORTANT---------------');
+            self.search_read('ir.attachment', [['res_id', '=', eventos_id]], self.tablas.Tbl_attachment_odoo)
+	  		.then(function(attachment) {
+	  		
+
+		  		Object.keys(attachment).forEach(key=> {
+
+		  			var registro = "INSERT OR REPLACE INTO attachment "+
+				    	"(id, cliente_id, file_size, name, eventos_id, is_cliente)"+
+				    	" VALUES (" + attachment[key].id + ", '"+attachment[key].cliente_id[0]+"', '" +attachment[key].file_size+"', '" 
+				    	+attachment[key].name +"', '"+attachment[key].eventos_id[0]+"', '"+attachment[key].is_cliente+"');";
+				    //console.log(registro); 
+
+
+				    sql.push(registro);
+				}); 
+
+				self.insertBatch(sql)
+			        .then(res => {
+			        	//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+			        	resolve();
+							
+					}).catch(e => {
+			  		console.log('Error en insertBatch DB');
+			  		console.log(e.message);
+			  		reject(e) 
+			  	});
+
+			
+		  	}, 
+			function() {
+		  		
+		  		console.log('Error search_read - Loading offline attachment');
+		  		//console.log('usr.tipo_usuario'+ usr.tipo_usuario);						        	
+		  		reject();							  		
+			});
+
+			
+
+        });
+
+        return promise;	
+
+	}
+
 	public cargarAttachment(borrar){
 
 		var self = this;
@@ -336,7 +440,7 @@ export class GetDatosProvider {
 
 	  			//console.log('resolvio gastos');
 	  			//console.log('-----------------entro4 ---------------');
-	  			console.log(JSON.stringify(attachment));
+	  			//console.log(JSON.stringify(attachment));
 	  			if(borrar == true){
 		  			sql.push('DELETE FROM attachment;');
 	  			}	
@@ -488,13 +592,13 @@ export class GetDatosProvider {
 
 	}*/
 
-	public updateGastos(id){
+	public updateGastos(eventos_id){
 
 		var self = this;
 		var sql = [];
 		var promise = new Promise(function (resolve, reject) {
             
-            self.search_read('rusia.gastostoursline', [["id", "=", id]], self.tablas.Tbl_gastos_odoo)
+            self.search_read('rusia.gastostoursline', [["eventos_id", "=", eventos_id]], self.tablas.Tbl_gastos_odoo)
 	  		.then(function(gastos) {
 	  		
 
@@ -656,17 +760,17 @@ export class GetDatosProvider {
 	  			}			  			
 	  			var registro = "INSERT OR IGNORE INTO eventos "+
 			    	"(id, cliente_id_tmp, cliente_id, representante_id, representante_id_tmp,"+
-			    	" Fecha_Inicio, hora_inicio , hora_final, hora_chofer, name, is_padre, fecha_padre, guia_id,"+
+			    	" Fecha_Inicio, hora_inicio , hora_final, hora_chofer, name, is_padre, fecha_padre, guia_id, guia_id2, guia_id3,"+
 			    	" chofer_id_tmp, chofer_id, gasto_rub, gasto_eur, gasto_usd, gasto_paypal, Comentarios_Chofer,"+
 			    	" Comentarios_Internos, Comentarios_Cliente, Comentarios_Guia, Fecha_Fin, Transporte, hotel_id,"+
 			    	" ciudad_id, Total_Representante, message, numero_pax, evento_id, Servicio_Gastos, tarjeta_eur,"+
-			    	" tarjeta_rub, tarjeta_usd, is_guia, is_traslado, gastostoursline_ids, guia_id_tmp, gastos_ids,"+
+			    	" tarjeta_rub, tarjeta_usd, is_guia, is_traslado, gastostoursline_ids, guia_id_tmp, guia_id_tmp2, guia_id_tmp3, gastos_ids,"+
 			    	" servicio_id, salario, observaciones_solicitud, nombre_reserva)"+
 			    	" VALUES (" + eventos[key].id + ", '"+eventos[key].Datos_Cliente_id[0]+"', '" + JSON.stringify(eventos[key].Datos_Cliente_id)+"', '" +
 			    	JSON.stringify(eventos[key].representante_id)+ "', '"+ eventos[key].representante_id[0] +"', '" + eventos[key].Fecha_Inicio +"','" + 
 			    	eventos[key].hora_inicio + "', '" + eventos[key].hora_final + "', '" + self.parseDato(eventos[key].hora_chofer) + "', '" + 
 			    	eventos[key].name + "', '" + eventos[key].is_padre +"', '" + 
-			    	eventos[key].fecha_padre +"', '" + JSON.stringify(eventos[key].guia_id)+ "' , '" + 
+			    	eventos[key].fecha_padre +"', '" + JSON.stringify(eventos[key].guia_id)+ "' , '" + JSON.stringify(eventos[key].guia_id2)+ "' , '" + JSON.stringify(eventos[key].guia_id3)+ "' , '" + 
 			    	eventos[key].chofer_id[0] + "' , '" +JSON.stringify(eventos[key].chofer_id) + "' , '" + eventos[key].gasto_rub + "' , '" + 
 			    	eventos[key].gasto_eur + "' , '" + eventos[key].gasto_usd + "' , '" + 
 			    	eventos[key].gasto_paypal + "', '" + self.parseDato(eventos[key].Comentarios_Chofer) + "', '" + 
@@ -676,7 +780,7 @@ export class GetDatosProvider {
 			    	eventos[key].Total_Representante+"', '"+self.parseDato(eventos[key].message)+"', '"+eventos[key].numero_pax+"', '"+
 			    	JSON.stringify(eventos[key].evento_id)+"', '"+eventos[key].Servicio_Gastos+"', '"+eventos[key].tarjeta_eur+"', '"+
 			    	eventos[key].tarjeta_rub+"', '"+eventos[key].tarjeta_usd+"' , '"+eventos[key].is_guia+"', '"+eventos[key].is_traslado+"', '"+ 
-			    	JSON.stringify(eventos[key].gastostoursline_ids)+"', '"+eventos[key].guia_id[0]+"', '"+ JSON.stringify(eventos[key].gastos_ids) +"', '"+
+			    	JSON.stringify(eventos[key].gastostoursline_ids)+"', '"+eventos[key].guia_id[0]+"', '"+eventos[key].guia_id2[0]+"', '"+eventos[key].guia_id3[0]+"', '"+ JSON.stringify(eventos[key].gastos_ids) +"', '"+
 			    	JSON.stringify(eventos[key].servicio_id)+"', '"+eventos[key].salario+"', '"+self.parseDato(eventos[key].observaciones_solicitud)+"', '"
 			    	+self.parseDato(eventos[key].nombre_reserva)+"');";
 			    //console.log(registro);							  			
@@ -792,7 +896,7 @@ export class GetDatosProvider {
 					    	"',Fecha_Inicio = '" +  eventos[key].Fecha_Inicio +"', hora_inicio ='" + eventos[key].hora_inicio +
 					    	"', hora_final = '" + eventos[key].hora_final + "', hora_chofer = '" + self.parseDato(eventos[key].hora_chofer) +
 					    	"', name = '" + eventos[key].name + "', is_padre = '" + eventos[key].is_padre +"', fecha_padre = '" + eventos[key].fecha_padre +
-					    	"', guia_id =  '" + JSON.stringify(eventos[key].guia_id)+ "', chofer_id_tmp =  '" + eventos[key].chofer_id[0] + 
+					    	"', guia_id =  '" + JSON.stringify(eventos[key].guia_id)+"', guia_id2 =  '" + JSON.stringify(eventos[key].guia_id)+ "', guia_id3 =  '" + JSON.stringify(eventos[key].guia_id)+ "', chofer_id_tmp =  '" + eventos[key].chofer_id[0] + 
 					    	"', chofer_id = '" +JSON.stringify(eventos[key].chofer_id) + "', gasto_rub = '" + eventos[key].gasto_rub + "', gasto_eur = '" + eventos[key].gasto_eur + 
 					    	"', gasto_usd =  '" + eventos[key].gasto_usd + "' , gasto_paypal = '" + eventos[key].gasto_paypal +
 					    	"', Comentarios_Chofer='" + self.parseDato(eventos[key].Comentarios_Chofer) +
@@ -802,7 +906,7 @@ export class GetDatosProvider {
 					    	"', Total_Representante='"+eventos[key].Total_Representante+"', message='"+self.parseDato(eventos[key].message)+"', numero_pax='"+eventos[key].numero_pax+"', evento_id='"+JSON.stringify(eventos[key].evento_id)+
 					    	"', Servicio_Gastos='"+eventos[key].Servicio_Gastos+"', tarjeta_eur='"+eventos[key].tarjeta_eur+
 					    	"', tarjeta_rub='"+eventos[key].tarjeta_rub+"', tarjeta_usd='"+eventos[key].tarjeta_usd+"', is_guia='"+eventos[key].is_guia+"', is_traslado='"+eventos[key].is_traslado+
-					    	"', gastostoursline_ids='"+ JSON.stringify(eventos[key].gastostoursline_ids)+"', guia_id_tmp='"+eventos[key].guia_id[0]+"', gastos_ids='"+ JSON.stringify(eventos[key].gastos_ids) +
+					    	"', gastostoursline_ids='"+ JSON.stringify(eventos[key].gastostoursline_ids)+"', guia_id_tmp2='"+eventos[key].guia_id[0]+"', guia_id_tmp3='"+eventos[key].guia_id[0]+"', guia_id_tmp='"+eventos[key].guia_id[0]+"', gastos_ids='"+ JSON.stringify(eventos[key].gastos_ids) +
 					    	"', servicio_id='"+JSON.stringify(eventos[key].servicio_id)+"', salario='"+eventos[key].salario+"', observaciones_solicitud='"+self.parseDato(eventos[key].observaciones_solicitud)+"', nombre_reserva = '"+self.parseDato(eventos[key].nombre_reserva)+
 					    	"' WHERE id = '" +eventos[key].id+"'";
 					   	console.log("UPDATE IMPORTANTE -------------------------------------------------------------")
@@ -831,6 +935,8 @@ export class GetDatosProvider {
 
 	}
 
+	
+
 	public async cargarCalendario(borrar){
 
 		//borrarE, borrarG, borrarA, borrarC, borrarCi, borrarU, borrarS
@@ -842,29 +948,38 @@ export class GetDatosProvider {
 		
 		try{
 
+
+
+			var dateTem = new Date();
+			var dateInicio =  dateTem.setMonth(dateTem.getMonth()-3);
+			//2018-02-11 03:32:31
+			//console.log(dateTem.toISOString());
+
+			//console.log(this.convertirFechaTwo(dateInicio));
+			var fechaInicio = this.convertirFechaTwo(dateInicio);
 			if(self.usr.tipo_usuario + '' == 'is_root'){
-				dominio = [['is_padre', '=' , false]];
+				dominio = [['is_padre', '=' , false], ["Fecha_Inicio", ">=", fechaInicio]];
 				dominioUsers = [];				
 
 			}else if(self.usr.tipo_usuario + '' == 'is_client'){
-				dominio = [['is_padre', '=' , false],["Datos_Cliente_id", "=", self.usr.id]];
+				dominio = [['is_padre', '=' , false],["Datos_Cliente_id", "=", self.usr.id], ["Fecha_Inicio", ">=", fechaInicio]];
 
 			}else if(self.usr.tipo_usuario + '' == 'is_guia'){
 				
-				dominio = [['is_padre', '=' , false], ["guia_id", "=", self.usr.id]];
+				dominio = [['is_padre', '=' , false], ["guia_id", "=", self.usr.id], ["Fecha_Inicio", ">=", fechaInicio]];
 				dominioUsers = [["is_client", "=", false], ["is_rep", "=", false]];
 				dominioSol = [
 				["is_padre", "=", false],
 				["is_guia", "=", true],
-				["guia_id", "=", false]];																			
+				["guia_id", "=", false], ["Fecha_Inicio", ">=", fechaInicio]];																			
 			}else if(self.usr.tipo_usuario + '' == 'is_chofer'){
 
-				dominio = [['is_padre', '=' , false], ["chofer_id", "=", self.usr.id]];
+				dominio = [['is_padre', '=' , false], ["chofer_id", "=", self.usr.id], ["Fecha_Inicio", ">=", fechaInicio]];
 				dominioUsers = [["is_client", "=", false], ["is_rep", "=", false]];
 				dominioSol = [
 				["is_padre", "=", false],
 				["is_traslado", "=", true],
-				["chofer_id", "=", false]];		
+				["chofer_id", "=", false], ["Fecha_Inicio", ">=", fechaInicio]];		
 			}else if(self.usr.tipo_usuario == 'is_rep'){
 
 				dominio = [['is_padre', '=' , false], ["representante_id", "=", self.usr.id]];
@@ -932,8 +1047,10 @@ export class GetDatosProvider {
 				console.log('----------  await self.cargarServicios();');
 				await self.cargarServicios();	
 				await self.cargarHoteles();
+				await self.cargarConceptos();
 			}
 			
+
 
 			//return self.usr;
 
@@ -1400,7 +1517,17 @@ export class GetDatosProvider {
 
 					        self.sqlite.create(self.bd_conf).then((db: SQLiteObject) => {
 					      		//
-					      		var sql = [self.tablas.Tbl_solicitud, self.tablas.Tbl_hoteles, self.tablas.Tbl_gastos_ciudad, self.tablas.Tbl_gastostours, self.tablas.Tbl_eventos, self.tablas.Tbl_gastos, self.tablas.Tbl_user, self.tablas.Tbl_attachment, self.tablas.Tbl_ciudad, self.tablas.Tbl_servicios];
+					      		var sql = [self.tablas.Tbl_solicitud, 
+					      				self.tablas.Tbl_conceptos,
+							      		self.tablas.Tbl_hoteles, 
+							      		self.tablas.Tbl_gastos_ciudad, 
+							      		self.tablas.Tbl_gastostours, 
+							      		self.tablas.Tbl_eventos, 
+							      		self.tablas.Tbl_gastos, 
+							      		self.tablas.Tbl_user, 
+							      		self.tablas.Tbl_attachment, 
+							      		self.tablas.Tbl_ciudad, 
+							      		self.tablas.Tbl_servicios];
 
 						      	db.sqlBatch(sql)
 						      	.then(
@@ -1558,6 +1685,22 @@ export class GetDatosProvider {
 
         //+ ' ' + hora + ':' + minutos + ':' + segundos
         return year+'-' + month + '-'+ dia;
+    }
+
+    public convertirFechaTwo(fecha){
+        var dateS = new Date(fecha)
+
+        var date = new Date(dateS.getTime() + (dateS.getTimezoneOffset() * 60000));
+
+        var year = date.getFullYear();
+        var month = this.addCero(date.getMonth()+1);
+        var dia = this.addCero(date.getDate())
+        var hora = this.addCero(date.getHours())
+        var minutos = this.addCero(date.getMinutes())
+        var segundos = this.addCero(date.getSeconds())     
+
+        //
+        return year+'-' + month + '-'+ dia + ' ' + hora + ':' + minutos + ':' + segundos;
     }
 
 }

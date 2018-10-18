@@ -103,7 +103,7 @@ export class SolicitarPage {
         var self = this;
         
         self.cargar = true;
-        var reload = [true,true,true,true, true, true, true];
+        var reload = [true,false,false,false, false, false, false];
         this.getDatos.cargarCalendario(reload).then(
             res=>{
                 self.initSolicitar();

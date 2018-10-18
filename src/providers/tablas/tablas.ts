@@ -18,7 +18,7 @@ export class TablasProvider {
 	"fecha", 
 	"observaciones_solicitud", 
 	"ciudad_id"];
-
+	
 	private tbl_solicitud = "CREATE TABLE IF NOT EXISTS solicitud("+
 	" id INTEGER PRIMARY KEY,"+
 	" usuario_id VARCHAR(255),"+
@@ -36,7 +36,16 @@ export class TablasProvider {
 	" Tel_Emergency VARCHAR(30),"+	
 	" Code VARCHAR(255));";
 
+	private tbl_conceptos = "CREATE TABLE IF NOT EXISTS conceptos("+
+	" id INTEGER PRIMARY KEY,"+
+	" name VARCHAR(255),"+
+	" ciudades VARCHAR(255));";
+
 	private tbl_ciudad_odoo = [
+	"name",
+	"ciudades"];
+
+	private tbl_conceptos_odoo = [
 	"name",
 	"Tel_Emergency",
 	"Code"];
@@ -174,6 +183,8 @@ export class TablasProvider {
 	" is_guia VARCHAR(5),"+
 	" fecha_padre VARCHAR(20),"+	
 	" guia_id VARCHAR(255),"+
+	" guia_id2 VARCHAR(255),"+
+	" guia_id3 VARCHAR(255),"+
 	" chofer_id VARCHAR(255),"	+	
 	" chofer_id_tmp VARCHAR(20),"	+
 	" gasto_rub VARCHAR(10),"+
@@ -196,6 +207,8 @@ export class TablasProvider {
 	" tarjeta_rub VARCHAR(10),"+
 	" tarjeta_usd VARCHAR(10),"+
 	" guia_id_tmp VARCHAR(5),"+
+	" guia_id_tmp2 VARCHAR(5),"+
+	" guia_id_tmp3 VARCHAR(5),"+
 	" gastos_ids VARCHAR(255),"+
 	" servicio_id VARCHAR(255),"+
 	" observaciones_solicitud TEXT,"+
@@ -286,6 +299,8 @@ export class TablasProvider {
 	"__last_update",
 	"fecha_padre",
 	"guia_id", 
+	"guia_id2", 
+	"guia_id3", 
 	"chofer_id", 
 	"Fecha_Inicio", 
 	"Fecha_Fin",
@@ -387,6 +402,14 @@ export class TablasProvider {
 
 	public get Tbl_hoteles_odoo() : string[] {
 		return this.tbl_hoteles_odoo;
+	}
+
+	public get Tbl_conceptos(): string{
+		return this.tbl_conceptos;
+	}
+
+	public get Tbl_conceptos_odoo(): string []{
+		return this.tbl_conceptos_odoo;
 	}
 
 }

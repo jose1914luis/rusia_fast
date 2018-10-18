@@ -2,12 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { GetDatosProvider } from '../../providers/get-datos/get-datos';
 import { EventoPage } from '../../pages/evento/evento';
-/**
- * Generated class for the CalendarioPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 //@IonicPage()
 @Component({
@@ -31,10 +26,18 @@ export class CalendarioPage {
     };
 
     usuario;
+    private notification = [];
+    constructor(private localNotifications: LocalNotifications, public navCtrl: NavController, public navParams: NavParams, public getDatos:GetDatosProvider, public alertCtrl: AlertController) {
 
-    constructor(public navCtrl: NavController, public navParams: NavParams, public getDatos:GetDatosProvider, public alertCtrl: AlertController) {
-
+        this.localNotifications.clearAll();
+        this.localNotifications.cancelAll();
         this.initCalendario(false);
+        
+        /*this.localNotifications.schedule({
+            title: 'My first notification',
+            text: 'Thats pretty easy...',
+            foreground: true
+        });*/
     }
 
     private initCalendario(borrar){
@@ -74,6 +77,8 @@ export class CalendarioPage {
             );
         }
     }
+
+
 
 
     private datosOffline(){
@@ -121,7 +126,7 @@ export class CalendarioPage {
                 function(eventos: {rows}){
                 console.log('eventos loaded - OK');
                 var event_format = [];
-
+                let cont = 1;
                 for(var i=0; i<eventos.rows.length; i++) {
                     
                     var evento = eventos.rows.item(i);
@@ -150,8 +155,11 @@ export class CalendarioPage {
                     
                     
                     //var dateEnd = new Date(String(eventos.rows.item(i).Fecha_Inicio).replace(' ', 'T'));
+
+                    let startTime = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]);
+
                     event_format.push({
-                        startTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]),
+                        startTime:startTime,
                         endTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_fin[0], hora_fin[1]),
                         title:evento.name,
                         guia:tmp_guia_id[1],
@@ -160,7 +168,61 @@ export class CalendarioPage {
                         allDay:false,
                         id:eventos.rows.item(i).id
                     });
-                }                  
+
+                    //console.log("----------------------------");
+                    //console.log(startTime);
+
+                    let fecha_24 = new Date(startTime.setDate(startTime.getDate()-1));
+
+                    
+                    //console.log(fecha_24);
+
+
+                    let noti = {
+                        id:cont,
+                        title:'Proximo evento en 24h: ' + evento.name,
+                        text:tmp_servicio_id[1],
+                        foreground: true,
+                        trigger:{ at: new Date(fecha_24.getFullYear(), fecha_24.getMonth(), fecha_24.getDate(), hora_ini[0], hora_ini[1])}
+                    }
+
+                    self.notification.push(noti);
+                    let fecha_12 = new Date(startTime.setHours(hora_ini[0]-12));
+                    //console.log(fecha_12);
+                    cont = cont + 1;
+                    let noti_2 = {
+                        id:cont,
+                        title:'Proximo evento en 12h: ' + evento.name,
+                        text:tmp_servicio_id[1],
+                        foreground: true,
+                        trigger:{ at: new Date(fecha_12.getFullYear(), fecha_12.getMonth(), fecha_12.getDate(), hora_ini[0], hora_ini[1])}
+                    }               
+
+                    self.notification.push(noti_2);
+                    cont = cont + 1;
+
+                }  
+
+                /*let fecha_test = new Date();
+                let convertedDate = new Date( fecha_test.getUTCFullYear(), fecha_test.getUTCMonth(), fecha_test.getUTCDate(), fecha_test.getUTCHours(), fecha_test.getUTCMinutes(), fecha_test.getUTCSeconds() );
+                let noti_3 = {
+                    id:cont,
+                    title:'Proximo evento en 1 minuto',
+                    text:'hola',
+                    foreground: true,
+                    trigger:{ at: new Date(fecha_test.getFullYear(), fecha_test.getMonth(), fecha_test.getDate(), fecha_test.getHours(), fecha_test.getMinutes() + 2 , fecha_test.getSeconds())}
+                }               
+                // trigger:{ in: 1, unit: 'minute' }
+                //trigger:{ at: new Date(fecha_test.getUTCFullYear(), fecha_test.getUTCMonth(), fecha_test.getUTCDate(), fecha_test.getUTCHours(), fecha_test.getUTCMinutes() + 2 , fecha_test.getUTCSeconds())}
+
+                self.notification.push(noti_3);*/
+
+                console.log(JSON.stringify(self.notification));
+
+
+
+                //console.log(convertedDate);
+                self.localNotifications.schedule(self.notification);
                 self.calendar.eventSource = event_format;
                 self.cargar = false;
                 resolve();

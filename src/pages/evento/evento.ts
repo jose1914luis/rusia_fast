@@ -36,6 +36,8 @@ export class EventoPage {
 	 is_padre :'',
 	 fecha_padre :'',	
 	 guia_id :[0,''],
+	 guia_id2 :[0,''],
+	 guia_id3 :[0,''],
 	 chofer_id :[0,''],	 
 	 gasto_rub :'',
 	 gasto_eur :'',
@@ -68,6 +70,8 @@ export class EventoPage {
 	private clientes = [];
 	private default_cliente = [];
 	private default_guia = [];
+	private default_guia2 = [];
+	private default_guia3 = [];
 	private default_chofer = [];
 
 	private eventos = [];
@@ -76,6 +80,7 @@ export class EventoPage {
 	private gastostoursline_ids = [];
 	private attachment = [];
 	private gastostours = [];
+	private conceptos = [];
 
 	private servicios = [];
 	private default_servicio = [];
@@ -179,8 +184,15 @@ export class EventoPage {
 				self.default_cliente = tmp_cliente_id;
 				var tmp_representante_id = JSON.parse(evento.representante_id);
 				self.evento.representante_id = tmp_representante_id;
+				
 				var tmp_guia_id = JSON.parse(evento.guia_id);
 				self.default_guia = tmp_guia_id;
+
+				var tmp_guia_id2 = JSON.parse(evento.guia_id2);
+				self.default_guia2 = tmp_guia_id2;
+
+				var tmp_guia_id3 = JSON.parse(evento.guia_id3);
+				self.default_guia3 = tmp_guia_id3;
 
 				/*console.log('---------------------------' + typeof evento.chofer_id );
 				console.log('---------------------------' + (evento.chofer_id == 'false') );
@@ -202,6 +214,8 @@ export class EventoPage {
 				self.evento.cliente_id = tmp_cliente_id;
 				
 				self.evento.guia_id = tmp_guia_id;
+				self.evento.guia_id2 = tmp_guia_id2;
+				self.evento.guia_id3 = tmp_guia_id3;
 				self.evento.chofer_id = tmp_chofer_id;
 				
 				self.evento.ciudad_id = tmp_ciudad_id;
@@ -284,6 +298,31 @@ export class EventoPage {
 			    		self.gastostours.push(gastos);
 			      		//console.log(eventos[key].name);
 			    	}										    	
+                   	
+                }
+
+			},
+			fail=>{
+				console.log('Fail load gastostours');
+			}
+		);
+
+		await self.getDatos.ejecutarSQL('SELECT * FROM conceptos ORDER BY name ASC').then(
+			function(conceptos: {rows}){
+
+											 
+				for(var i=0; i<conceptos.rows.length; i++) {
+
+					var concepto = conceptos.rows.item(i);
+
+					self.conceptos.push(concepto);
+
+					/*var tmp_ciudades = JSON.parse(concepto.ciudades);
+
+					if(tmp_ciudades.indexOf(self.evento.ciudad_id[0]) > -1) {
+			    		self.conceptos.push(gastos);
+			      		//console.log(eventos[key].name);
+			    	}		*/								    	
                    	
                 }
 
@@ -417,6 +456,30 @@ export class EventoPage {
     	}
     }
 
+    seleccionGuia2(ev: any){
+
+    	
+    	if (JSON.stringify(this.evento.guia_id2) == 'false') {
+    		//console.log('-----entro----')    		
+    		delete this.evento.guia_id2;
+    		this.evento.guia_id2 = [ev, ''];
+    	}else{
+    		this.evento.guia_id2[0] = ev;
+    	}
+    }
+
+    seleccionGuia3(ev: any){
+
+    	
+    	if (JSON.stringify(this.evento.guia_id3) == 'false') {
+    		//console.log('-----entro----')    		
+    		delete this.evento.guia_id3;
+    		this.evento.guia_id3 = [ev, ''];
+    	}else{
+    		this.evento.guia_id3[0] = ev;
+    	}
+    }
+
     seleccionChofer(ev: any){
     	//console.log(ev)
     	if (JSON.stringify(this.evento.chofer_id) == 'false') {
@@ -487,6 +550,8 @@ export class EventoPage {
 							 evento_id: self.evento.evento_id[0],
 							 servicio_id: self.evento.servicio_id[0],
 							 guia_id: ((JSON.stringify(self.evento.guia_id) == 'false')?self.evento.guia_id:self.evento.guia_id[0]),
+							 guia_id2: ((JSON.stringify(self.evento.guia_id2) == 'false')?self.evento.guia_id2:self.evento.guia_id2[0]),
+							 guia_id3: ((JSON.stringify(self.evento.guia_id3) == 'false')?self.evento.guia_id3:self.evento.guia_id3[0]),
 							 chofer_id: ((JSON.stringify(self.evento.chofer_id) == 'false')?self.evento.chofer_id:self.evento.chofer_id[0])
 						};	
 						break;		
@@ -664,7 +729,7 @@ export class EventoPage {
 		        			
 		        			self.cargar = true;
 		        			//var reload = [false,true,false,false,false,false,false]
-		        			self.getDatos.updateGastos(gasto.id).then(
+		        			self.getDatos.updateGastos(self.evento.id).then(
 				        		res=>{
 
 				        			/*console.log('Update complete');
@@ -725,8 +790,8 @@ export class EventoPage {
             	self.guardar([[0,0,data]], 1).then(
 	        		res=>{
 	        			self.cargar = true;
-	        			var reload = [false,true,false,false,false,false,false]
-	        			self.getDatos.cargarCalendario(reload).then(
+	        			//var reload = [false,true,false,false,false,false,false]
+	        			self.getDatos.updateGastos(self.evento.id).then(
 			        		res=>{
 			        			/*console.log('Update*/
 			        			self.getDatos.updateCalendario(self.evento.id).then(
@@ -905,7 +970,7 @@ export class EventoPage {
     	
     	//if(!this.editable){
 
-    		this.navCtrl.push(DetallesReservaPage, {evento:this.evento, permisos:this.permisos, padre:false});
+    		this.navCtrl.push(DetallesReservaPage, {evento:this.evento, permisos:this.permisos, padre:false, conceptos:this.conceptos});
     	//}
     	
     }
@@ -928,7 +993,7 @@ export class EventoPage {
 
 
 		var self = this;
-        let profileModal = this.modalCtrl.create(DocumentoPage);
+        let profileModal = this.modalCtrl.create(DocumentoPage, {conceptos:self.conceptos});
         
         profileModal.onDidDismiss(data => {
         				
@@ -944,11 +1009,20 @@ export class EventoPage {
             	self.guardar(data, 2).then(
 	        		res=>{
 	        			self.cargar = true;
-	        			var reload = [true,false,true,false,false,false,false];
-	        			self.getDatos.cargarCalendario(reload).then(
+	        			//var reload = [true,false,true,false,false,false,false];
+
+	        			self.getDatos.updateAttachment(self.evento.id).then(
 			        		res=>{
-			        			console.log('Update complete');
-			        			self.initEvento();
+			        			self.getDatos.updateCalendario(self.evento.id).then(
+					        		res=>{
+					        			console.log('Update complete');
+					        			self.initEvento();
+					        		},
+					        		fail=>{
+
+					        			console.log('Error loading cgastos');
+					        		}
+					        	);
 			        		},
 			        		fail=>{
 

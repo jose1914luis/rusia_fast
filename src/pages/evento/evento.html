@@ -173,6 +173,28 @@
 
 	            <autocomplete *ngIf="editable" [lista]="clientes" [default]="default_guia" placeholder="Guía" (onselect) = "seleccionGuia($event)"></autocomplete>
 	        </ion-col>       
+	    </ion-row>
+
+	    <ion-row align-items-center>  
+	        <ion-col col-6>
+	            <b>Guía 2</b>
+	        </ion-col>
+	        <ion-col col-6>
+	            <ion-input *ngIf="!editable" name="evento.guia_id2" placeholder="Guía 2" readonly type="text" [(ngModel)]="evento.guia_id2[1]"></ion-input>
+
+	            <autocomplete *ngIf="editable" [lista]="clientes" [default]="default_guia2" placeholder="Guía" (onselect) = "seleccionGuia2($event)"></autocomplete>
+	        </ion-col>       
+	    </ion-row>
+
+	    <ion-row align-items-center>  
+	        <ion-col col-6>
+	            <b>Guía 3</b>
+	        </ion-col>
+	        <ion-col col-6>
+	            <ion-input *ngIf="!editable" name="evento.guia_id3" placeholder="Guía 3" readonly type="text" [(ngModel)]="evento.guia_id3[1]"></ion-input>
+
+	            <autocomplete *ngIf="editable" [lista]="clientes" [default]="default_guia3" placeholder="Guía" (onselect) = "seleccionGuia3($event)"></autocomplete>
+	        </ion-col>       
 	    </ion-row>    
 
 	    <ion-row align-items-center>  

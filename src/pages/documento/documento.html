@@ -63,7 +63,7 @@
 	        </ion-col>
 	        <ion-col col-8>
 	             <ion-col col-4>
-                <button ion-button color="danger" type="button" (click)="agregarAttachment()" >Subir</button>
+                <button ion-button color="danger" type="button" (click)="optionsGetFile()" >Subir</button>
             </ion-col>
 	        </ion-col>    
 	    </ion-row>   
@@ -103,8 +103,12 @@
 	            <b>Concepto</b>
 	        </ion-col>
 	        <ion-col col-8>	        	
-	            <ion-select name="doc.concepto_id"  [(ngModel)]="doc.concepto_id">
-	            	<!--ion-option *ngFor="let gasto_t of gastostours" [value]="gasto_t.id">{{gasto_t.name}}</ion-option-->
+
+	        	<ion-select name="doc.concepto_id" [(ngModel)]="doc.concepto_id">
+	            	<ion-option *ngFor="let con_d of conceptos" [value]="con_d.id">{{con_d.name}}</ion-option>
+	            </ion-select>
+
+	            <!--ion-select name="doc.concepto_id"  [(ngModel)]="doc.concepto_id">
 
 					<ion-option value="1">Ganancia</ion-option>						            	
 					<ion-option value="2">Servicios</ion-option>
@@ -118,7 +122,7 @@
 					<ion-option value="10">Deposito Krasnie Kvadrat</ion-option>
 					<ion-option value="11">Billetes tren</ion-option>
 					<ion-option value="12">Comision Tatiana Sochi</ion-option>
-	            </ion-select>    
+	            </ion-select-->    
 	        </ion-col>    
 	    </ion-row> 
 
