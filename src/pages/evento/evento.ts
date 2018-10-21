@@ -285,7 +285,7 @@ export class EventoPage {
 			}
 		);
 
-		await self.getDatos.ejecutarSQL('SELECT * FROM gastostours').then(
+		await self.getDatos.ejecutarSQL('SELECT * FROM gastostours ORDER BY name ASC').then(
 			function(gastostours: {rows}){
 
 											 

@@ -107,4 +107,19 @@ export class SolicitarAdminPage {
 
   }
 
+  refresh(){
+        var self = this;
+        
+        self.cargar = true;
+        var reload = [true,false,false,false, false, false, false];
+        this.getDatos.cargarCalendario(reload).then(
+            res=>{
+                self.initSolicitar();
+            },
+            fail=>{
+                console.log('Error refresh tables');
+            }
+        );
+    }
+
 }

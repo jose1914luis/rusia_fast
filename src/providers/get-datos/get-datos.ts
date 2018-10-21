@@ -15,11 +15,12 @@ export class GetDatosProvider {
 
 	private db: SQLiteObject = null;
 
-	private url = '/api'; 
-	//private url = 'https://rusiatoursmoscu.com';    //"proxyUrl":"http://rusiatoursmoscu.com"
+	//private url = '/api'; 
+	private url = 'https://rusiatoursmoscu.com';    //"proxyUrl":"http://rusiatoursmoscu.com"
 
 	public usr = null;	
 	private eventoHijo = [];
+	private eventosTodos = [];
 	private gastos_ciudad = [];
 
 	private bd_conf = {
@@ -94,9 +95,7 @@ export class GetDatosProvider {
 	  		.then(function(gastostours) {
 	  		
 
-	    		/*if(borrar == true){
-		  			sql.push('DELETE FROM ciudad;');
-	  			}*/
+	    		sql.push('DELETE FROM conceptos;');
 
 		  		Object.keys(gastostours).forEach(key=> {
 
@@ -202,7 +201,7 @@ export class GetDatosProvider {
 	  		.then(function(servicios) {
 	  		
 
-	  			//console.log(JSON.stringify(gastostours))
+	  			sql.push('DELETE FROM tiposervicios;');
 	            
 		  		Object.keys(servicios).forEach(key=> {
 
@@ -258,7 +257,7 @@ export class GetDatosProvider {
 	  		.then(function(servicios) {
 	  		
 
-	  			//console.log(JSON.stringify(gastostours))
+	  			sql.push('DELETE FROM hoteles;');
 	            
 		  		Object.keys(servicios).forEach(key=> {
 
@@ -311,7 +310,7 @@ export class GetDatosProvider {
 	  		.then(function(gastostours) {
 	  		
 
-	  			//console.log(JSON.stringify(gastostours))
+	  			sql.push('DELETE FROM gastostours;');
 	            
 		  		Object.keys(gastostours).forEach(key=> {
 
@@ -433,14 +432,11 @@ export class GetDatosProvider {
 		var sql = [];
 		var promise = new Promise(function (resolve, reject) {
             
-            //console.log('-----------------entro3 ---------------');
+            console.log(JSON.stringify(self.eventosTodos));
             self.search_read('ir.attachment', [], self.tablas.Tbl_attachment_odoo)
 	  		.then(function(attachment) {
 	  		
 
-	  			//console.log('resolvio gastos');
-	  			//console.log('-----------------entro4 ---------------');
-	  			//console.log(JSON.stringify(attachment));
 	  			if(borrar == true){
 		  			sql.push('DELETE FROM attachment;');
 	  			}	
@@ -647,7 +643,7 @@ export class GetDatosProvider {
 		var sql = [];
 		var promise = new Promise(function (resolve, reject) {
             
-            self.search_read('rusia.gastostoursline', [["id", "<>", 0]], self.tablas.Tbl_gastos_odoo)
+            self.search_read('rusia.gastostoursline', [["eventos_id", "in", self.eventosTodos]], self.tablas.Tbl_gastos_odoo)
 	  		.then(function(gastos) {
 	  		
 
@@ -818,9 +814,17 @@ export class GetDatosProvider {
 				//console.log('tmp_dominio is null -------------------------------------------------------1');
 				//console.log(JSON.stringify(self.eventoHijo));
 				self.read('rusia.eventos', self.eventoHijo, self.tablas.Tbl_eventos_odoo).then(
-					eventos=>{
-						//console.log(' va por los padres -------------------------------------------------------2');
-						//console.log(JSON.stringify(eventos));
+					function(eventos) {
+
+						//console.log('eventos ---------------1');
+						Object.keys(eventos).forEach(key=> {
+							
+							//console.log(JSON.stringify(eventos[key].id));
+			  				if(self.eventosTodos.indexOf(eventos[key].id) == -1) {
+			  					self.eventosTodos.push(eventos[key].id);
+			  				}
+			  			});
+
 						self.guardarEventos(eventos, true, false).then(
 		      				res=>{
 		      					//console.log(' entro a  cargarGastosCiudad-------------------------------------------------------2');
@@ -851,7 +855,14 @@ export class GetDatosProvider {
 			self.search_read('rusia.eventos', tmp_dominio, self.tablas.Tbl_eventos_odoo)
 	      		.then(function(eventos) {
 
-	      			
+	      			Object.keys(eventos).forEach(key=> {
+							
+							//console.log(JSON.stringify(eventos[key].id));
+		  				if(self.eventosTodos.indexOf(eventos[key].id) == -1) {
+		  					self.eventosTodos.push(eventos[key].id);
+		  				}
+		  			});
+
 	      			self.guardarEventos(eventos, false, borrar).then(
 	      				res=>{
 	      					resolve();
@@ -951,7 +962,7 @@ export class GetDatosProvider {
 
 
 			var dateTem = new Date();
-			var dateInicio =  dateTem.setMonth(dateTem.getMonth()-3);
+			var dateInicio =  dateTem.setMonth(dateTem.getMonth()-2);
 			//2018-02-11 03:32:31
 			//console.log(dateTem.toISOString());
 
@@ -1013,7 +1024,7 @@ export class GetDatosProvider {
 				await self.cargarEventos(null, false);	
 			}
 			
-
+			
 			if(borrar[1]){
 
 				console.log('----------  await self.cargarGastos(false);;');				

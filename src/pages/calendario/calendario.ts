@@ -48,7 +48,7 @@ export class CalendarioPage {
 
             var reload = [true,true,true,true,true,true,true];
             this.getDatos.cargarCalendario(reload).then(          
-              function() {                                
+              res=> {                                
                 self.datosOffline().then(
                     good=>{
                         console.log('exito');
@@ -58,9 +58,9 @@ export class CalendarioPage {
                     }
                 );                                                            
               },
-               function(e){
+              fail=>{
                    console.log('Error en calendario');
-                   console.log(e);
+                   //console.log(e);
                }
             );
 
@@ -156,10 +156,10 @@ export class CalendarioPage {
                     
                     //var dateEnd = new Date(String(eventos.rows.item(i).Fecha_Inicio).replace(' ', 'T'));
 
-                    let startTime = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]);
+                    let startTime2 = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]);
 
                     event_format.push({
-                        startTime:startTime,
+                        startTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]),
                         endTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_fin[0], hora_fin[1]),
                         title:evento.name,
                         guia:tmp_guia_id[1],
@@ -170,9 +170,9 @@ export class CalendarioPage {
                     });
 
                     //console.log("----------------------------");
-                    //console.log(startTime);
+                    //console.log(startTime2);
 
-                    let fecha_24 = new Date(startTime.setDate(startTime.getDate()-1));
+                    let fecha_24 = new Date(startTime2.setDate(startTime2.getDate()-1));
 
                     
                     //console.log(fecha_24);
@@ -187,7 +187,7 @@ export class CalendarioPage {
                     }
 
                     self.notification.push(noti);
-                    let fecha_12 = new Date(startTime.setHours(hora_ini[0]-12));
+                    let fecha_12 = new Date(startTime2.setHours(hora_ini[0]-12));
                     //console.log(fecha_12);
                     cont = cont + 1;
                     let noti_2 = {
@@ -217,7 +217,7 @@ export class CalendarioPage {
 
                 self.notification.push(noti_3);*/
 
-                console.log(JSON.stringify(self.notification));
+                //console.log(JSON.stringify(self.notification));
 
 
 
