@@ -86,7 +86,8 @@ var SolicitarPage = /** @class */ (function () {
     SolicitarPage.prototype.refresh = function () {
         var self = this;
         self.cargar = true;
-        this.getDatos.cargarCalendario(true, true, true, true).then(function (res) {
+        var reload = [true, false, false, false, false, false, false];
+        this.getDatos.cargarCalendario(reload).then(function (res) {
             self.initSolicitar();
         }, function (fail) {
             console.log('Error refresh tables');

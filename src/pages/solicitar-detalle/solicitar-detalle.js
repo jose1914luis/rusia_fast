@@ -122,7 +122,8 @@ var SolicitarDetallePage = /** @class */ (function () {
             //console.log('ID:' + this.evento.id)
             //console.log('usd:' + campos.gasto_usd)
             self.getDatos.write('rusia.eventos', self.evento.id, campos).then(function (res) {
-                self.getDatos.cargarCalendario(true, false, false, false).then(function (res) {
+                var reload = [true, false, false, false, false, false, false];
+                self.getDatos.cargarCalendario(reload).then(function (res) {
                     console.log('Update complete');
                     self.initSolitarDetalles();
                 }, function (fail) {

@@ -30,23 +30,33 @@
       (ionCancel)="onCancel($event)">          
     </ion-searchbar>
 
-	<ion-grid *ngFor="let reserva of items; let i = index" (click)="abrir_reserva(reserva)">                 
+    <div *ngIf="cargar" style="text-align: center">    
+        <ion-spinner name="circles"></ion-spinner><br>
+        <b>Cargando...</b>
+	</div>
+
+	<ion-grid *ngFor="let reserva of items; let i = index" >                 
         
         <ion-row align-items-center>  
-            <ion-col col-6>
+            <ion-col col-6 (click)="abrir_reserva(reserva)">
                 <b>{{reserva.name}}</b>
             </ion-col>
-            <ion-col col-4>
+            <ion-col col-4 (click)="abrir_reserva(reserva)">
                 {{reserva.fecha_padre}}         
+            </ion-col>  
+            <ion-col col-2>
+            	<button ion-button small color="danger" type="button" (click)="borrarReserva(reserva.id)" ><ion-icon name="ios-trash" ></ion-icon></button>                
             </ion-col>       
         </ion-row>      
         <ion-row align-items-center class="borde">  
             <ion-col col-6>
                 <b>{{reserva.cliente_nombre}}</b>
             </ion-col>
-            <ion-col col-6>
+            <ion-col col-4>
                 {{reserva.representante_nombre}}         
-            </ion-col>       
+            </ion-col>  
+
+            
         </ion-row>    
         
     </ion-grid>

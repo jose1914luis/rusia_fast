@@ -59,6 +59,7 @@ var SolicitarAdminPage = /** @class */ (function () {
         self.solicitudes = [];
         self.cargar = true;
         this.getDatos.ejecutarSQL('SELECT * FROM solicitud ORDER BY id DESC').then(function (solicitudes) {
+            console.log('entro');
             for (var i = 0; i < solicitudes.rows.length; i++) {
                 var solicitud = solicitudes.rows.item(i);
                 //console.log(JSON.stringify(solicitud))
@@ -147,6 +148,16 @@ var SolicitarAdminPage = /** @class */ (function () {
                     case 5: return [2 /*return*/];
                 }
             });
+        });
+    };
+    SolicitarAdminPage.prototype.refresh = function () {
+        var self = this;
+        self.cargar = true;
+        var reload = [true, false, false, false, false, false, false];
+        this.getDatos.cargarCalendario(reload).then(function (res) {
+            self.initSolicitar();
+        }, function (fail) {
+            console.log('Error refresh tables');
         });
     };
     SolicitarAdminPage = __decorate([

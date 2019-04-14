@@ -12,11 +12,11 @@ import { Nav, Platform, NavParams } from 'ionic-angular';
 import { CalendarioPage } from '../../pages/calendario/calendario';
 import { ConfiPage } from '../../pages/confi/confi';
 import { ReservasPage } from '../../pages/reservas/reservas';
-import { GatosTourPage } from '../../pages/gatos-tour/gatos-tour';
 import { LoginPage } from '../../pages/login/login';
 import { PerfilPage } from '../../pages/perfil/perfil';
 import { SolicitarPage } from '../../pages/solicitar/solicitar';
 import { SolicitarAdminPage } from '../../pages/solicitar-admin/solicitar-admin';
+import { GanPage } from '../../pages/gan/gan';
 var PanelPage = /** @class */ (function () {
     function PanelPage(platform, navParams) {
         this.platform = platform;
@@ -70,7 +70,8 @@ var PanelPage = /** @class */ (function () {
                 { title: 'Reservas', component: ReservasPage },
                 { title: 'Solicitudes recibidas', component: SolicitarAdminPage },
                 { title: 'Configuración', component: ConfiPage },
-                { title: 'Gastos Temporal', component: GatosTourPage },
+                { title: 'Ganancias', component: GanPage },
+                //{ title: 'Gastos Temporal',  component:GatosTourPage },
                 { title: 'Mi Perfil', component: PerfilPage },
                 //{ title: 'Acerca de', component: AcercaPage },
                 { title: 'Salir', component: 'salir' },
@@ -79,6 +80,7 @@ var PanelPage = /** @class */ (function () {
         else if ("is_general" == tipo_usuario) {
             this.pages = [
                 { title: 'Calendario', component: CalendarioPage },
+                { title: 'Solicitudes recibidas', component: SolicitarAdminPage },
                 { title: 'Mi Perfil', component: PerfilPage },
                 //{ title: 'Acerca de', component: AcercaPage },       
                 { title: 'Salir', component: 'salir' },

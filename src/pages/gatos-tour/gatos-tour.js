@@ -19,13 +19,18 @@ var GatosTourPage = /** @class */ (function () {
         this.ver_segmento = true;
         this.cargar = false;
         this.gastostours = [];
+        this.ciudades = [];
         this.clientes = [];
         this.usuario_id = false;
         this.default = [];
         this.prueba = 'hola mundo';
+        this.nuevo = true;
         this.gasto = this.navParams.get('gasto');
         //console.log(this.gasto.usuario_id);
         this.default = this.gasto.usuario_id;
+        if (this.gasto.id != null) {
+            this.nuevo = false;
+        }
         console.log(JSON.stringify(this.gasto));
         if (this.default.length > 0) {
             this.usuario_id = this.default[0];
@@ -43,7 +48,16 @@ var GatosTourPage = /** @class */ (function () {
                 self.clientes.push(user.rows.item(i));
             }
             //console.log(JSON.stringify(self.clientes));
-            self.cargar = false;
+            //self.cargar = false;
+            self.getDatos.ejecutarSQL('SELECT * FROM ciudad').then(function (ciudad) {
+                for (var i = 0; i < ciudad.rows.length; i++) {
+                    self.ciudades.push(ciudad.rows.item(i));
+                }
+                //console.log(JSON.stringify(ciudad.rows));
+                self.cargar = false;
+            }, function (fail) {
+                console.log('Fail load gastos');
+            });
         }, function (fail) {
         });
     };

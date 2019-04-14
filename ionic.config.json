@@ -1,15 +1,14 @@
 {
   "name": "GuiaRus",
-  "app_id": "",
-  "type": "ionic-angular",
   "integrations": {
     "cordova": {}
   },
-	"proxies": [
-	    {
-	        "path": "/api",
-	        "proxyUrl":"https://rusiatoursmoscu.com:443",
-			"rejectUnauthorized":false
-	    }
-	]
+  "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://rusiatoursmoscu.com:443",
+      "rejectUnauthorized": false
+    }
+  ]
 }

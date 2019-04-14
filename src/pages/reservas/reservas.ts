@@ -12,82 +12,112 @@ import { DetallesReservaPage } from '../../pages/detalles-reserva/detalles-reser
 export class ReservasPage {
 
 
-	private reservas = [];
-    private items = [];
-    private max = 10;
-	constructor(public navCtrl: NavController, public navParams: NavParams, public getDatos:GetDatosProvider, public modalCtrl: ModalController) {
-		
-		var self = this; 
-        //WHERE is_padre = "true"
-		this.getDatos.ejecutarSQL('SELECT * FROM eventos WHERE is_padre = "true" ORDER BY id DESC').then(
+  private reservas = [];
+  private items = [];
+  private max = 10;
+  private cargar = false;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public getDatos: GetDatosProvider, public modalCtrl: ModalController) {
 
-			function(eventos:{rows}){
+    this.initReserva();
+  }
 
-				for(var i=0; i<eventos.rows.length; i++) {
+  private initReserva(){
 
-                    var evento = eventos.rows.item(i);
-                    
-                    self.reservas.push(evento);    
-                    console.log(JSON.stringify(eventos.rows.item(i)));                
-                }
+    var self = this;
+    this.reservas = [];
+    this.getDatos.ejecutarSQL('SELECT * FROM eventos WHERE is_padre = "true" ORDER BY id DESC').then(
 
-                self.initItems();
-			},
-			function(){
-				console.log('Error Reservas');
-			}
-		);
-	}
+      function (eventos: { rows }) {
 
+        for (var i = 0; i < eventos.rows.length; i++) {
 
-    private initItems(){
+          var evento = eventos.rows.item(i);
 
-        for (var i = 0; i <  this.reservas.length && i < this.max; i++) {
-            this.items.push(this.reservas[i]);
+          self.reservas.push(evento);
+          console.log(JSON.stringify(eventos.rows.item(i)));
         }
+
+        self.initItems();
+      },
+      function () {
+        console.log('Error Reservas');
+      }
+    );
+  }
+
+
+  private initItems() {
+
+    for (var i = 0; i < this.reservas.length && i < this.max; i++) {
+      this.items.push(this.reservas[i]);
     }
+  }
 
-    private onCancel(ev: any){
+  private onCancel(ev: any) {
 
-        this.initItems();
+    this.initItems();
+  }
+
+  private getItems(ev: any) {
+    // set val to the value of the searchbar
+    const val = ev.target.value;
+
+    // if the value is an empty string don't filter the items
+    if (val && val.trim() != '') {
+      this.items = this.reservas.filter((item) => {
+        return (item.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
     }
+  }
 
-    private  getItems(ev: any) {
-        // set val to the value of the searchbar
-        const val = ev.target.value;
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
 
-        // if the value is an empty string don't filter the items
-        if (val && val.trim() != '') {
-          this.items = this.reservas.filter((item) => {
-            return (item.name.toLowerCase().indexOf(val.toLowerCase()) > -1);
-          })
+    var self = this;
+    setTimeout(() => {
+
+      let i;
+      for (i = self.max; i < this.reservas.length && i < this.max + 10; i++) {
+        this.items.push(this.reservas[i]);
+      }
+      this.max = i;
+
+      console.log('Async operation has ended');
+      infiniteScroll.complete();
+    }, 500);
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad ReservasPage');
+  }
+
+  private abrir_reserva(reserva) {
+
+    this.navCtrl.push(DetallesReservaPage, { evento: reserva, permisos: 'is_guia', padre: true });
+  }
+
+  private borrarReserva(id) {
+
+    console.log(id);
+
+    this.cargar = true;
+    var self = this;
+
+    if (id != null) { // nuevo		
+
+      //console.log('self.gasto.id ' +  self.gasto.id );
+      self.getDatos.eliminar('rusia.eventos', id).then(
+        res => {
+          self.cargar = true;
+          console.log('evento borrado');
+          self.initReserva();          
+        },
+        fail => {
+          console.log('error create gastos');
         }
+
+      );
     }
-
-    doInfinite(infiniteScroll) {
-        console.log('Begin async operation');
-
-        var self = this;
-        setTimeout(() => {
-          
-          let i;
-          for (i = self.max; i < this.reservas.length && i < this.max + 10 ; i++) {
-            this.items.push(this.reservas[i]);
-          }
-          this.max = i;
-
-          console.log('Async operation has ended');
-          infiniteScroll.complete();
-        }, 500);
-    }
-
-	ionViewDidLoad() {
-		console.log('ionViewDidLoad ReservasPage');
-	}
-
-	private abrir_reserva(reserva){		
-
-        this.navCtrl.push(DetallesReservaPage, {evento:reserva, permisos:'is_guia', padre:true});
-	}    
+  }
 
 }

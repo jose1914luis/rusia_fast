@@ -33,6 +33,24 @@ var TablasProvider = /** @class */ (function () {
             " fecha VARCHAR(20), " +
             " observaciones_solicitud TEXT," +
             " ciudad_id VARCHAR(255));";
+        this.tbl_ciudad = "CREATE TABLE IF NOT EXISTS ciudad(" +
+            " id INTEGER PRIMARY KEY," +
+            " name VARCHAR(255)," +
+            " Tel_Emergency VARCHAR(30)," +
+            " Code VARCHAR(255));";
+        this.tbl_conceptos = "CREATE TABLE IF NOT EXISTS conceptos(" +
+            " id INTEGER PRIMARY KEY," +
+            " name VARCHAR(255)," +
+            " ciudades VARCHAR(255));";
+        this.tbl_ciudad_odoo = [
+            "name",
+            "ciudades"
+        ];
+        this.tbl_conceptos_odoo = [
+            "name",
+            "Tel_Emergency",
+            "Code"
+        ];
         this.tbl_gastos = "CREATE TABLE IF NOT EXISTS gastostoursline(" +
             " id INTEGER PRIMARY KEY," +
             " concepto_gasto_id VARCHAR(255)," +
@@ -144,6 +162,8 @@ var TablasProvider = /** @class */ (function () {
             " cliente_id_tmp VARCHAR(255)," +
             " cliente_id VARCHAR(20)," +
             " representante_id VARCHAR(255)," +
+            " nombre_reserva VARCHAR(255)," +
+            " representante_id_tmp VARCHAR(20)," +
             " Fecha_Inicio VARCHAR(20)," +
             " Fecha_Fin VARCHAR(20)," +
             " hora_inicio VARCHAR(10)," +
@@ -155,6 +175,8 @@ var TablasProvider = /** @class */ (function () {
             " is_guia VARCHAR(5)," +
             " fecha_padre VARCHAR(20)," +
             " guia_id VARCHAR(255)," +
+            " guia_id2 VARCHAR(255)," +
+            " guia_id3 VARCHAR(255)," +
             " chofer_id VARCHAR(255)," +
             " chofer_id_tmp VARCHAR(20)," +
             " gasto_rub VARCHAR(10)," +
@@ -177,14 +199,50 @@ var TablasProvider = /** @class */ (function () {
             " tarjeta_rub VARCHAR(10)," +
             " tarjeta_usd VARCHAR(10)," +
             " guia_id_tmp VARCHAR(5)," +
+            " guia_id_tmp2 VARCHAR(5)," +
+            " guia_id_tmp3 VARCHAR(5)," +
             " gastos_ids VARCHAR(255)," +
             " servicio_id VARCHAR(255)," +
             " observaciones_solicitud TEXT," +
             " salario VARCHAR(10)," +
             " gastostoursline_ids VARCHAR(255));";
-        this.tbl_eventos_odoo = ["Comentarios_Chofer",
+        this.tbl_hoteles_odoo = [
+            "name",
+            "ciudad_id",
+            "direccion"
+        ];
+        this.tbl_hoteles = "CREATE TABLE IF NOT EXISTS hoteles(" +
+            " id INTEGER PRIMARY KEY," +
+            " name VARCHAR(255)," +
+            " ciudad_id VARCHAR(255)," +
+            " direccion VARCHAR(255))";
+        this.tbl_servicios_odoo = [
+            "name",
+            "Code",
+            "Hora_Inicio",
+            "Hora_Finalizar",
+            "is_traslado",
+            "is_guia",
+            "ciudad_id",
+            "hora_chofer",
+            "Descripcion"
+        ];
+        this.tbl_servicios = "CREATE TABLE IF NOT EXISTS tiposervicios(" +
+            " id INTEGER PRIMARY KEY," +
+            " name VARCHAR(255)," +
+            " Code VARCHAR(255)," +
+            " Hora_Inicio VARCHAR(20)," +
+            " Hora_Finalizar VARCHAR(20)," +
+            " is_traslado VARCHAR(20)," +
+            " is_guia VARCHAR(20)," +
+            " ciudad_id VARCHAR(255)," +
+            " hora_chofer VARCHAR(20)," +
+            " Descripcion TEXT);";
+        this.tbl_eventos_odoo = [
+            "Comentarios_Chofer",
             "Total_Beneficios",
             "tarjeta_usd_pos",
+            "nombre_reserva",
             "servicio_id",
             "salario",
             "observaciones_solicitud",
@@ -229,13 +287,16 @@ var TablasProvider = /** @class */ (function () {
             "__last_update",
             "fecha_padre",
             "guia_id",
+            "guia_id2",
+            "guia_id3",
             "chofer_id",
             "Fecha_Inicio",
             "Fecha_Fin",
             "hora_inicio",
             "hora_final",
             "is_adjudicado",
-            "hora_chofer"];
+            "hora_chofer"
+        ];
         /*constructor() {
             console.log('Hello TablasProvider Provider');
         }*/
@@ -340,9 +401,65 @@ var TablasProvider = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_ciudad", {
+        get: function () {
+            return this.tbl_ciudad;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_ciudad_odoo", {
+        get: function () {
+            return this.tbl_ciudad_odoo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_servicios", {
+        get: function () {
+            return this.tbl_servicios;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_servicios_odoo", {
+        get: function () {
+            return this.tbl_servicios_odoo;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(TablasProvider.prototype, "Tbl_solicitud_odoo", {
         get: function () {
             return this.tbl_solicitud_odoo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_hoteles", {
+        get: function () {
+            return this.tbl_hoteles;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_hoteles_odoo", {
+        get: function () {
+            return this.tbl_hoteles_odoo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_conceptos", {
+        get: function () {
+            return this.tbl_conceptos;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TablasProvider.prototype, "Tbl_conceptos_odoo", {
+        get: function () {
+            return this.tbl_conceptos_odoo;
         },
         enumerable: true,
         configurable: true

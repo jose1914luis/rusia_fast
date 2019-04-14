@@ -23,14 +23,15 @@ var AutocompleteComponent = /** @class */ (function () {
         //lista2 = [];
         this.buscar = '';
         this.id = 0;
+        this.disabled = true;
         //console.log('Hello AutocompleteComponent Component');
         //this.text = 'Hello World';
         //this.buscar = this.default;
     }
     AutocompleteComponent.prototype.ngAfterViewInit = function () {
+        //console.log('defaul value is:');
+        //console.log(this.default.length);
         var _this = this;
-        console.log('defaul value is:');
-        console.log(this.default.length);
         if (this.default.length > 0) {
             setTimeout(function () {
                 _this.buscar = _this.default[1];

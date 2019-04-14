@@ -157,8 +157,7 @@ export class CalendarioPage {
                     //var dateEnd = new Date(String(eventos.rows.item(i).Fecha_Inicio).replace(' ', 'T'));
 
                     let startTime2 = new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]);
-
-                    event_format.push({
+                    let ev = {
                         startTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_ini[0], hora_ini[1]),
                         endTime:new Date(dateStart.getFullYear(), dateStart.getMonth(), dateStart.getDate(), hora_fin[0], hora_fin[1]),
                         title:evento.name,
@@ -167,7 +166,15 @@ export class CalendarioPage {
                         tipo_servicio:tmp_servicio_id[1],
                         allDay:false,
                         id:eventos.rows.item(i).id
-                    });
+                    };
+
+                    //if(evento.name == 'MX001181019-70-2'){
+                        console.log(JSON.stringify(evento));
+                        console.log('----------------------------------');
+                        console.log(JSON.stringify(ev));
+                    //}
+
+                    event_format.push(ev);
 
                     //console.log("----------------------------");
                     //console.log(startTime2);
@@ -224,6 +231,7 @@ export class CalendarioPage {
                 //console.log(convertedDate);
                 self.localNotifications.schedule(self.notification);
                 self.calendar.eventSource = event_format;
+                //console.log(JSON.stringify(event_format));
                 self.cargar = false;
                 resolve();
               },

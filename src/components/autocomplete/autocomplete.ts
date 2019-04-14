@@ -83,7 +83,7 @@ export class AutocompleteComponent {
         this.buscar = valor.name;
         this.id = valor.id;     
         console.log(this.id);
-        this.onselect.emit(this.id);
+        this.onselect.emit([this.id, valor.name]);
     }
 
 

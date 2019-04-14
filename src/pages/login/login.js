@@ -18,6 +18,12 @@ var LoginPage = /** @class */ (function () {
         this.navParams = navParams;
         this.getData = getData;
         this.cargar = false;
+        //admin x ciudad     
+        //conexion = {usuario: 'sp@guiarus.com', bd: 'rusia3', pwd: '123456'};
+        //Admin traslados    
+        //conexion = {usuario: 'eu@guiarus.com', bd: 'rusia3', pwd: '123456'};
+        //Representante    
+        //conexion = {usuario: 'info@guiarus.com', bd: 'rusia3', pwd: '123456'};
         //guia
         //conexion = {usuario: 'joselugar8@hotmail.com', bd: 'rusia3', pwd: '123456'}; //pruebas
         //conexion = {usuario: 'cupabanoscar@gmail.com', bd: 'rusia3', pwd: '123456'};//produccion 
@@ -28,7 +34,8 @@ var LoginPage = /** @class */ (function () {
         //conexion = {usuario: 'abrilgalvez5@yahoo.com.mx', bd: 'rusia3', pwd: '123456'}; //   pruebas
         //chofer
         //conexion = {usuario: 'chofersanpetersburgo@gmail.com', bd: 'rusia3', pwd: '123456'};  //  prd
-        this.conexion = { usuario: '', bd: 'rusia3', pwd: '' };
+        //conexion = {usuario: '', bd: 'rusia3', pwd: ''};
+        this.conexion = { usuario: 'sergey.guiarus@gmail.com', bd: 'rusia3', pwd: '123456' };
         var operacion = this.navParams.get('operacion');
         if (operacion != null && operacion == 'salir') {
             this.getData.deleteBD();
