@@ -54,7 +54,7 @@ export class AutocompleteComponent {
         
         //console.log(e);
 	    if (this.buscar.length > 0) {
-	        console.log('entro en el key ');
+	        //console.log('entro en el key ');
 	        this.lista_visible = true;
 	        this.lista = [];
 	        for (var key in this.lista2) {
@@ -67,7 +67,8 @@ export class AutocompleteComponent {
 	            }
 	        }
 	    } else {
-	        this.lista_visible = false;
+          this.lista_visible = false;
+          this.onselect.emit([0, ""]);
 	    }	    
 	}
 

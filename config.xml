@@ -106,7 +106,7 @@
     <allow-navigation href="http://192.168.1.10:8100" />
     <allow-navigation href="http://192.168.1.13:8100" />
     <allow-navigation href="http://192.168.1.15:8100" />
-    <allow-navigation href="http://192.168.43.210:8100" sessionid="30421b85" />
+    <allow-navigation href="http://192.168.43.210:8100" sessionid="e2eb43e1" />
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="7.0.0" />
     <engine name="ios" spec="4.5.4" />

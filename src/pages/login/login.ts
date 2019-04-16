@@ -25,20 +25,20 @@ export class LoginPage {
    	//guia
     //conexion = {usuario: 'joselugar8@hotmail.com', bd: 'rusia3', pwd: '123456'}; //pruebas
     
-    //conexion = {usuario: 'cupabanoscar@gmail.com', bd: 'rusia3', pwd: '123456'};//produccion 
+    conexion = {usuario: 'cupabanoscar@gmail.com', bd: 'rusia3', pwd: '123456'};//produccion 
  
     //chofer
     //conexion = {usuario: 'anton1985info@gmail.com', bd: 'rusia3', pwd: '123456'};
     
  
-    conexion = {usuario: 'reservas@guiarus.com', bd: 'rusia3', pwd: 'Vdigieheix34bdj'};//produccion 
+    //conexion = {usuario: 'reservas@guiarus.com', bd: 'rusia3', pwd: 'Vdigieheix34bdj'};//produccion 
     //cliente
     //conexion = {usuario: 'abrilgalvez5@yahoo.com.mx', bd: 'rusia3', pwd: '123456'}; //   pruebas
     
     //chofer
 
     //conexion = {usuario: 'chofersanpetersburgo@gmail.com', bd: 'rusia3', pwd: '123456'};  //  prd
-    //conexion = {usuario: '', bd: 'rusia3', pwd: ''};
+    conexion = {usuario: '', bd: 'rusia3', pwd: ''};
     //conexion = {usuario: 'sergey.guiarus@gmail.com', bd: 'rusia3', pwd: '123456'};
     //conexion = {usuario: 'sp@guiarus.com', bd: 'rusia3', pwd: '123456'};
     mensaje;

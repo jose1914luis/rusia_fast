@@ -451,7 +451,7 @@ export class EventoPage {
 		if (JSON.stringify(this.evento.guia_id) == 'false') {
 			//console.log('-----entro----')    		
 			delete this.evento.guia_id;
-		} 
+		}
 		this.evento.guia_id = ev;
 	}
 
@@ -478,11 +478,11 @@ export class EventoPage {
 	}
 
 	seleccionChofer(ev: any) {
-		//console.log(ev)
+		console.log(ev)
 		if (JSON.stringify(this.evento.chofer_id) == 'false') {
 			//console.log('-----entro----')    		
 			delete this.evento.chofer_id;
-		} 
+		}
 		this.evento.chofer_id = ev;
 	}
 
@@ -526,8 +526,8 @@ export class EventoPage {
 				switch (opcion) {
 					case 0:
 						//self.evento.chofer_id = (self.evento.chofer_id[1] == '')?'false':self.evento.chofer_id;
-						let tmp_chofer = null;
-						if(self.evento.chofer_id[1] != '' && self.evento.chofer_id[0] != 0 && JSON.stringify(self.evento.chofer_id) != 'false'){
+						/*let tmp_chofer = null;
+						if(self.evento.chofer_id[0] != 0 && JSON.stringify(self.evento.chofer_id) != 'false'){
 							tmp_chofer =  self.evento.chofer_id[0];
 						}
 						console.log('*****************************************');
@@ -536,7 +536,7 @@ export class EventoPage {
 						console.log(self.evento.chofer_id[1]);
 						console.log(self.evento.chofer_id[0]);
 						console.log(JSON.stringify(self.evento.chofer_id));
-						console.log('*****************************************');
+						console.log('*****************************************');*/
 						campos = {
 
 							Fecha_Inicio: self.evento.Fecha_Inicio,
@@ -554,10 +554,10 @@ export class EventoPage {
 							cliente_id: self.evento.cliente_id[0],
 							evento_id: self.evento.evento_id[0],
 							servicio_id: self.evento.servicio_id[0],
-							guia_id: ((JSON.stringify(self.evento.guia_id) == 'false') ? self.evento.guia_id : self.evento.guia_id[0]),
-							guia_id2: ((JSON.stringify(self.evento.guia_id2) == 'false') ? self.evento.guia_id2 : self.evento.guia_id2[0]),
-							guia_id3: ((JSON.stringify(self.evento.guia_id3) == 'false') ? self.evento.guia_id3 : self.evento.guia_id3[0]),
-							chofer_id: (tmp_chofer != null)?tmp_chofer:false,
+							guia_id: ((JSON.stringify(self.evento.guia_id) == 'false' && self.evento.guia_id[0] == 0) ? false : self.evento.guia_id[0]),
+							guia_id2: ((JSON.stringify(self.evento.guia_id2) == 'false' && self.evento.guia_id2[0] == 0) ? false : self.evento.guia_id2[0]),
+							guia_id3: ((JSON.stringify(self.evento.guia_id3) == 'false' && self.evento.guia_id3[0] == 0) ? false : self.evento.guia_id3[0]),
+							chofer_id: (self.evento.chofer_id[0] != 0 && JSON.stringify(self.evento.chofer_id) != 'false') ? self.evento.chofer_id[0] : false,
 						};
 						break;
 					case 1:
